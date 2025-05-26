@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Login Section -->
+    <div id="loginSection" class="bg-white p-4 rounded shadow mx-auto" style="max-width: 28rem;">
+        <h2 class="h2 fw-bold mb-4 text-center">ePharma Login</h2>
+        <select id="loginRole" class="form-select mb-4">
+            <option value="Doctor">Doctor</option>
+            <option value="Patient">Patient</option>
+            <option value="Pharmacy">Pharmacy</option>
+        </select>
+        <input id="loginUsername" type="text" placeholder="Username" class="form-control mb-4">
+        <input id="loginPassword" type="password" placeholder="Password" class="form-control mb-4">
+        <button onclick="login()" class="btn btn-primary w-100 mb-4">Login</button>
+        <p class="text-center">New user? <a href="#" id="showSignupLink" class="text-primary text-decoration-underline">Sign Up</a></p>
+    </div>
+
+    <!-- Signup Section -->
+    <div id="signupSection" class="d-none bg-white p-4 rounded shadow mx-auto" style="max-width: 28rem;">
+        <h2 class="h2 fw-bold mb-4 text-center">ePharma Sign Up</h2>
+        <form id="signupForm" onsubmit="event.preventDefault(); signup();">
+            <select id="signupRole" class="form-select mb-4" required>
+                <option value="Doctor">Doctor</option>
+                <option value="Patient">Patient</option>
+                <option value="Pharmacy">Pharmacy</option>
+            </select>
+            <input id="signupUsername" type="text" placeholder="Username" class="form-control mb-4" required>
+            <input id="signupPassword" type="password" placeholder="Password" class="form-control mb-4" required>
+            <input id="signupName" type="text" placeholder="Full Name" class="form-control mb-4" required>
+            <input id="signupEmail" type="email" placeholder="Email" class="form-control mb-4">
+            <input id="signupZipCode" type="text" placeholder="Zip Code" class="form-control mb-4">
+            <input id="signupAllergies" type="text" placeholder="Allergies (for Patients)" class="form-control mb-4" disabled>
+            <button type="submit" class="btn btn-success w-100">Sign Up</button>
+        </form>
+        <p class="mt-4 text-center">Already registered? <a href="#" id="showLoginLink" class="text-primary text-decoration-underline">Login</a></p>
+    </div>
+
+    <!-- Doctor Dashboard -->
+    <div id="doctorDashboard" class="d-none bg-white p-4 rounded shadow mt-4">
+        <h2 class="h2 fw-bold mb-4">Doctor Dashboard - <span id="doctorName"></span></h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <h3 class="h3 mb-2">Prescribe Medicine</h3>
+                <form id="prescribeForm" onsubmit="event.preventDefault(); prescribe();">
+                    <select id="patientId" class="form-select mb-2" required>
+                        <option value="" disabled selected>Select a Patient</option>
+                    </select>
+                    <select id="medicineId" class="form-select mb-2" required>
+                        <option value="" disabled selected>Select a Medicine</option>
+                    </select>
+                    <input id="symptoms" type="text" placeholder="Symptoms" class="form-control mb-2">
+                    <input id="dosage" type="text" placeholder="Dosage (e.g., 1 tablet daily)" class="form-control mb-2" required>
+                    <input id="duration" type="number" placeholder="Duration (days)" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-success w-100">Prescribe</button>
+                </form>
+            </div>
+            <div class="col">
+                <h3 class="h3 mb-2">Analytics</h3>
+                <button onclick="fetchMostPrescribed()" class="btn btn-primary w-100">Most Prescribed Medicines</button>
+                <div id="analytics" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Dashboard -->
+    <div id="patientDashboard" class="d-none bg-white p-4 rounded shadow mt-4">
+        <h2 class="h2 fw-bold mb-4">Patient Dashboard - <span id="patientName"></span></h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <h3 class="h3 mb-2">My Prescriptions</h3>
+                <button onclick="fetchPrescriptions()" class="btn btn-primary w-100">View Prescriptions</button>
+                <div id="prescriptions" class="mt-4"></div>
+            </div>
+            <div class="col">
+                <h3 class="h3 mb-2">Order Medicine</h3>
+                <form id="orderForm" onsubmit="event.preventDefault(); placeOrder();">
+                    <select id="prescriptionId" class="form-select mb-2" required>
+                        <option value="" disabled selected>Select a Prescription</option>
+                    </select>
+                    <select id="pharmacyId" class="form-select mb-2" required>
+                        <option value="" disabled selected>Select a Pharmacy</option>
+                    </select>
+                    <button type="submit" class="btn btn-success w-100">Place Order</button>
+                </form>
+                <h3 class="h3 mt-4 mb-2">Nearby Pharmacies</h3>
+                <select id="zipCode" class="form-select mb-2" required>
+                    <option value="" disabled selected>Select Zip Code</option>
+                </select>
+                <select id="medicineIdPharmacy" class="form-select mb-2" required>
+                    <option value="" disabled selected>Select Medicine</option>
+                </select>
+                <button onclick="findPharmacies()" class="btn btn-primary w-100">Find Pharmacies</button>
+                <div id="nearbyPharmacies" class="mt-4"></div>
+                <h3 class="h3 mt-4 mb-2">Refill Reminders</h3>
+                <button onclick="fetchRefillReminders()" class="btn btn-primary w-100">Check Reminders</button>
+                <div id="refillReminders" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pharmacy Dashboard -->
+    <div id="pharmacyDashboard" class="d-none bg-white p-4 rounded shadow mt-4">
+        <h2 class="h2 fw-bold mb-4">Pharmacy Dashboard - <span id="pharmacyName"></span></h2>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <h3 class="h3 mb-2">Pending Orders</h3>
+                <button onclick="fetchOrders()" class="btn btn-primary w-100">View Orders</button>
+                <div id="pendingOrders" class="mt-4"></div>
+            </div>
+            <div class="col">
+                <h3 class="h3 mb-2">Update Stock</h3>
+                <form id="stockForm" onsubmit="event.preventDefault(); updateStock();" class="p-3 rounded bg-light">
+                    <div class="mb-3">
+                        <label for="medicineIdStock" class="form-label">Select Medicine</label>
+                        <select id="medicineIdStock" class="form-select mb-2" onchange="toggleNewTabletFields()">
+                            <option value="" disabled selected>Select a Medicine</option>
+                            <option value="new">Add New Tablet</option>
+                        </select>
+                    </div>
+                    <div id="newTabletFields" class="d-none mb-3">
+                        <input id="newTabletName" type="text" placeholder="Tablet Name" class="form-control mb-2" disabled>
+                        <input id="newTabletStrength" type="text" placeholder="Strength (e.g., 500mg)" class="form-control mb-2" disabled>
+                        <input id="newTabletManufacturer" type="text" placeholder="Manufacturer" class="form-control mb-2" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input id="quantity" type="number" placeholder="Quantity to Add" class="form-control mb-2" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Update Stock</button>
+                </form>
+                <div id="stockConfirmation" class="mt-3 text-center"></div>
+                <h3 class="h3 mt-4 mb-2">Low Stock Alerts</h3>
+                <button onclick="fetchLowStock()" class="btn btn-primary w-100">Check Low Stock</button>
+                <div id="lowStock" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @media (max-width: 576px) {
+            #stockForm {
+                padding: 1rem !important;
+            }
+            #stockForm .form-label {
+                font-size: 0.9rem;
+            }
+            #stockForm .form-control,
+            #stockForm .form-select {
+                font-size: 0.9rem;
+            }
+            #stockForm button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+{% endblock %}
