@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ePharma System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4">
+        <!-- Login Section -->
+        <div id="login" class="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto">
+            <h2 class="text-2xl font-bold mb-4 text-center">ePharma Login</h2>
+            <select id="role" class="border p-2 mb-4 w-full rounded">
+                <option value="Doctor">Doctor</option>
+                <option value="Patient">Patient</option>
+                <option value="Pharmacy">Pharmacy</option>
+            </select>
+            <input id="username" type="text" placeholder="Username" class="border p-2 mb-4 w-full rounded">
+            <input id="password" type="password" placeholder="Password" class="border p-2 mb-4 w-full rounded">
+            <button onclick="login()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Login</button>
+        </div>
+
+        <!-- Doctor Dashboard -->
+        <div id="doctorDashboard" class="hidden bg-white p-6 rounded-lg shadow-lg mt-4">
+            <h2 class="text-2xl font-bold mb-4">Doctor Dashboard - <span id="doctorName"></span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="text-xl mb-2">Prescribe Medicine</h3>
+                    <form id="prescribeForm" onsubmit="event.preventDefault(); prescribe();">
+                        <input id="patientId" type="text" placeholder="Patient ID" class="border p-2 mb-2 w-full rounded" required>
+                        <input id="medicineId" type="text" placeholder="Medicine ID" class="border p-2 mb-2 w-full rounded" required>
+                        <input id="symptoms" type="text" placeholder="Symptoms" class="border p-2 mb-2 w-full rounded">
+                        <input id="dosage" type="text" placeholder="Dosage (e.g., 1 tablet daily)" class="border p-2 mb-2 w-full rounded" required>
+                        <input id="duration" type="number" placeholder="Duration (days)" class="border p-2 mb-2 w-full rounded" required>
+                        <button type="submit" class="bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">Prescribe</button>
+                    </form>
+                </div>
+                <div>
+                    <h3 class="text-xl mb-2">Analytics</h3>
+                    <button onclick="fetchMostPrescribed()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Most Prescribed Medicines</button>
+                    <div id="analytics" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Dashboard -->
+        <div id="patientDashboard" class="hidden bg-white p-6 rounded-lg shadow-lg mt-4">
+            <h2 class="text-2xl font-bold mb-4">Patient Dashboard - <span id="patientName"></span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="text-xl mb-2">My Prescriptions</h3>
+                    <button onclick="fetchPrescriptions()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">View Prescriptions</button>
+                    <div id="prescriptions" class="mt-4"></div>
+                </div>
+                <div>
+                    <h3 class="text-xl mb-2">Order Medicine</h3>
+                    <form id="orderForm" onsubmit="event.preventDefault(); placeOrder();">
+                        <input id="prescriptionId" type="text" placeholder="Prescription ID" class="border p-2 mb-2 w-full rounded" required>
+                        <input id="pharmacyId" type="text" placeholder="Pharmacy ID" class="border p-2 mb-2 w-full rounded" required>
+                        <button type="submit" class="bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">Place Order</button>
+                    </form>
+                    <h3 class="text-xl mt-4 mb-2">Nearby Pharmacies</h3>
+                    <input id="zipCode" type="text" placeholder="Enter Zip Code" class="border p-2 mb-2 w-full rounded">
+                    <input id="medicineIdPharmacy" type="text" placeholder="Medicine ID" class="border p-2 mb-2 w-full rounded">
+                    <button onclick="findPharmacies()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Find Pharmacies</button>
+                    <div id="nearbyPharmacies" class="mt-4"></div>
+                    <h3 class="text-xl mt-4 mb-2">Refill Reminders</h3>
+                    <button onclick="fetchRefillReminders()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Check Reminders</button>
+                    <div id="refillReminders" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pharmacy Dashboard -->
+        <div id="pharmacyDashboard" class="hidden bg-white p-6 rounded-lg shadow-lg mt-4">
+            <h2 class="text-2xl font-bold mb-4">Pharmacy Dashboard - <span id="pharmacyName"></span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="text-xl mb-2">Pending Orders</h3>
+                    <button onclick="fetchOrders()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">View Orders</button>
+                    <div id="pendingOrders" class="mt-4"></div>
+                </div>
+                <div>
+                    <h3 class="text-xl mb-2">Update Stock</h3>
+                    <form id="stockForm" onsubmit="event.preventDefault(); updateStock();">
+                        <input id="medicineIdStock" type="text" placeholder="Medicine ID" class="border p-2 mb-2 w-full rounded" required>
+                        <input id="quantity" type="number" placeholder="Quantity" class="border p-2 mb-2 w-full rounded" required>
+                        <button type="submit" class="bg-green-600 text-white p-2 rounded w-full hover:bg-green-700">Update Stock</button>
+                    </form>
+                    <h3 class="text-xl mt-4 mb-2">Low Stock Alerts</h3>
+                    <button onclick="fetchLowStock()" class="bg-blue-600 text-white p-2 rounded w-full hover:bg-blue-700">Check Low Stock</button>
+                    <div id="lowStock" class="mt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="static/script.js"></script>
+</body>
+</html>
