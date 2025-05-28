@@ -1,25 +1,16 @@
 from flask import Flask, request, jsonify, render_template, send_file
 from mysql.connector import Error, connect
 from datetime import datetime, timedelta
-import os  # Add this import
 
 app = Flask(__name__)
-
-# MySQL configuration using environment variables
-app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST', 'localhost')
-app.config['MYSQL_USER'] = os.getenv('MYSQLUSER', 'root')
-app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD', 'Chaitu895@')
-app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE', 'epharma')
-app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT', 3306))
 
 def get_db_connection():
     try:
         connection = connect(
-            host=app.config['MYSQL_HOST'],
-            user=app.config['MYSQL_USER'],
-            password=app.config['MYSQL_PASSWORD'],
-            database=app.config['MYSQL_DB'],
-            port=app.config['MYSQL_PORT']
+            host="localhost",
+            user="root",
+            password="Chaitu895@",
+            database="epharma"
         )
         return connection
     except Error as e:
