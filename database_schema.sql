@@ -93,5 +93,5 @@ INSERT INTO Prescriptions (doctor_id, patient_id, medicine_id, symptoms, dosage,
 
 -- Insert sample data into PharmacyStock
 INSERT INTO PharmacyStock (pharmacy_id, medicine_id, quantity) VALUES
-(5, 1, 100),
-(5, 2, 50);
+(3, 1, 100),
+(3, 2, 50);
