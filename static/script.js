@@ -2,6 +2,7 @@ let currentUser = null;
 
 // Attach event listeners for toggling between login and signup forms
 document.addEventListener('DOMContentLoaded', () => {
+    // Toggle between login and signup forms
     document.getElementById('showSignupLink').addEventListener('click', (e) => {
         e.preventDefault();
         showSignup();
@@ -13,6 +14,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('signupRole').addEventListener('change', function() {
         document.getElementById('signupAllergies').disabled = this.value !== 'Patient';
     });
+
+    // Add event listener for the login button
+    const loginButton = document.getElementById('loginButton');
+    if (loginButton) {
+        loginButton.addEventListener('click', () => {
+            login();
+        });
+    } else {
+        console.error('Login button not found in the DOM');
+    }
 });
 
 function showSignup() {
