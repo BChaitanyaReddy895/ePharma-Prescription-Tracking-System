@@ -62,7 +62,7 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h3 class="h4 mb-3 card-title">Analytics</h3>
-                        <button onclick="fetchMostPrescribed()" class="btn btn-primary w-100 py-2">Most Prescribed Medicines</button>
+                        <button id="mostPrescribedButton" class="btn btn-primary w-100 py-2">Most Prescribed Medicines</button>
                         <div id="analytics" class="mt-3"></div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h3 class="h4 mb-3 card-title">My Prescriptions</h3>
-                        <button onclick="fetchPrescriptions()" class="btn btn-primary w-100 py-2 mb-3">View Prescriptions</button>
+                        <button id="viewPrescriptionsButton" class="btn btn-primary w-100 py-2 mb-3">View Prescriptions</button>
                         <div id="prescriptions" class="mt-3"></div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                                 <select id="medicineIdPharmacy" class="form-select mb-3" required>
                                     <option value="" disabled selected>Select Medicine</option>
                                 </select>
-                                <button onclick="findPharmacies()" class="btn btn-primary w-100 py-2 mb-3">Find Pharmacies</button>
+                                <button id="findPharmaciesButton" class="btn btn-primary w-100 py-2 mb-3">Find Pharmacies</button>
                                 <div id="nearbyPharmacies" class="mt-3"></div>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="h4 mb-3 card-title">Refill Reminders</h3>
-                                <button onclick="fetchRefillReminders()" class="btn btn-primary w-100 py-2">Check Reminders</button>
+                                <button id="checkRemindersButton" class="btn btn-primary w-100 py-2">Check Reminders</button>
                                 <div id="refillReminders" class="mt-3"></div>
                             </div>
                         </div>
@@ -138,7 +138,7 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h3 class="h4 mb-3 card-title">Pending Orders</h3>
-                        <button onclick="fetchOrders()" class="btn btn-primary w-100 py-2">View Orders</button>
+                        <button id="viewOrdersButton" class="btn btn-primary w-100 py-2">View Orders</button>
                         <div id="pendingOrders" class="mt-3"></div>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
                         
                         <div class="mt-4">
                             <h4 class="h5 mb-3">Low Stock Alerts</h4>
-                            <button onclick="fetchLowStock()" class="btn btn-primary w-100 py-2">Check Low Stock</button>
+                            <button id="checkLowStockButton" class="btn btn-primary w-100 py-2">Check Low Stock</button>
                             <div id="lowStock" class="mt-3"></div>
                         </div>
                     </div>
