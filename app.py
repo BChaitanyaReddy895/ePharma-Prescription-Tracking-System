@@ -5,22 +5,30 @@ import os
 
 app = Flask(__name__)
 
+def init_db():
+    """Initialize the SQLite database."""
+    db_path = 'epharma.db'  # Use a temporary file in the app's root directory
+    try:
+        conn = sqlite3.connect(db_path)
+        with open('database_schema.sql', 'r') as f:
+            conn.executescript(f.read())
+        conn.commit()
+        conn.close()
+        print(f"Database initialized successfully at {db_path}")
+    except sqlite3.Error as e:
+        print(f"Error initializing database: {e}")
+        raise
+
 def get_db_connection():
     if 'db' not in g:
-        # Use an environment variable for the database path, default to 'epharma.db'
-        db_path = os.getenv('SQLITE_DB_PATH', 'epharma.db')
+        db_path = 'epharma.db'
         g.db = sqlite3.connect(db_path)
         g.db.row_factory = sqlite3.Row  # Allows fetching rows as dictionaries
     return g.db
 
-# Initialize the database if it doesn't exist
-db_path = os.getenv('SQLITE_DB_PATH', 'epharma.db')
-if not os.path.exists(db_path):
-    conn = sqlite3.connect(db_path)
-    with open('database_schema.sql', 'r') as f:
-        conn.executescript(f.read())
-    conn.commit()
-    conn.close()
+# Initialize the database on app startup
+with app.app_context():
+    init_db()
 
 @app.teardown_appcontext
 def close_db(error):
