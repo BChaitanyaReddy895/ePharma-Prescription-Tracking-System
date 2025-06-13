@@ -8,365 +8,30 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Bootstrap Icons for better UI -->
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     
-    <!-- Custom responsive styles -->
-    <style>
-        /* Root variables for consistent theming */
-        :root {
-            --primary-color: #0d6efd;
-            --success-color: #198754;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #0dcaf0;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --border-radius: 0.375rem;
-            --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            --box-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Base styles */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-color);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        /* Container responsive adjustments */
-        .container-fluid {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-        
-        /* Enhanced card styling */
-        .card {
-            border: none;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow-lg);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-        
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.2);
-        }
-        
-        /* Form enhancements */
-        .form-control, .form-select {
-            border-radius: var(--border-radius);
-            border: 1px solid #dee2e6;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-        }
-        
-        /* Button enhancements */
-        .btn {
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            transition: all 0.15s ease-in-out;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .btn:hover::before {
-            left: 100%;
-        }
-        
-        /* Loading spinner */
-        .spinner-border-sm {
-            width: 1rem;
-            height: 1rem;
-        }
-        
-        /* Alert enhancements */
-        .alert {
-            border-radius: var(--border-radius);
-            border: none;
-            box-shadow: var(--box-shadow);
-        }
-        
-        /* Table responsive enhancements */
-        .table-responsive {
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-        
-        .table {
-            margin-bottom: 0;
-        }
-        
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            background-color: var(--light-color);
-        }
-        
-        /* Mobile-first responsive breakpoints */
-        
-        /* Extra small devices (phones, less than 576px) */
-        @media (max-width: 575.98px) {
-            .container-fluid {
-                padding-left: 10px;
-                padding-right: 10px;
-                margin-top: 1rem !important;
-            }
-            
-            /* Typography scaling */
-            h1, .h1 { font-size: 1.75rem; }
-            h2, .h2 { font-size: 1.5rem; }
-            h3, .h3 { font-size: 1.25rem; }
-            h4, .h4 { font-size: 1.1rem; }
-            h5, .h5 { font-size: 1rem; }
-            
-            /* Form controls */
-            .form-control, .form-select {
-                font-size: 16px; /* Prevents zoom on iOS */
-                padding: 0.75rem;
-                min-height: 44px; /* Touch-friendly */
-            }
-            
-            /* Buttons */
-            .btn {
-                font-size: 1rem;
-                padding: 0.75rem 1rem;
-                min-height: 44px;
-                min-width: 44px;
-            }
-            
-            .btn-sm {
-                font-size: 0.875rem;
-                padding: 0.5rem 0.75rem;
-                min-height: 38px;
-            }
-            
-            /* Cards */
-            .card {
-                margin-bottom: 1rem;
-                border-radius: 0.5rem;
-            }
-            
-            .card-body {
-                padding: 1rem;
-            }
-            
-            /* Modals */
-            .modal-dialog {
-                margin: 0.5rem;
-            }
-            
-            /* Tables */
-            .table-responsive {
-                font-size: 0.875rem;
-            }
-            
-            /* Navigation improvements */
-            .navbar-nav .nav-link {
-                padding: 0.75rem 1rem;
-            }
-            
-            /* Utility classes for mobile */
-            .mobile-center {
-                text-align: center !important;
-            }
-            
-            .mobile-full-width {
-                width: 100% !important;
-            }
-            
-            .mobile-stack {
-                flex-direction: column !important;
-            }
-            
-            .mobile-stack > * {
-                margin-bottom: 0.5rem;
-            }
-            
-            .mobile-stack > *:last-child {
-                margin-bottom: 0;
-            }
-        }
-        
-        /* Small devices (landscape phones, 576px and up) */
-        @media (min-width: 576px) and (max-width: 767.98px) {
-            .container-fluid {
-                max-width: 540px;
-                margin: 2rem auto;
-            }
-            
-            .card-body {
-                padding: 1.25rem;
-            }
-        }
-        
-        /* Medium devices (tablets, 768px and up) */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .container-fluid {
-                max-width: 720px;
-                margin: 3rem auto;
-            }
-            
-            .card-body {
-                padding: 1.5rem;
-            }
-        }
-        
-        /* Large devices (desktops, 992px and up) */
-        @media (min-width: 992px) and (max-width: 1199.98px) {
-            .container-fluid {
-                max-width: 960px;
-                margin: 4rem auto;
-            }
-        }
-        
-        /* Extra large devices (large desktops, 1200px and up) */
-        @media (min-width: 1200px) {
-            .container-fluid {
-                max-width: 1140px;
-                margin: 5rem auto;
-            }
-        }
-        
-        /* Print styles */
-        @media print {
-            .btn, .navbar, .sidebar {
-                display: none !important;
-            }
-            
-            .card {
-                box-shadow: none !important;
-                border: 1px solid #dee2e6 !important;
-            }
-            
-            body {
-                background: white !important;
-            }
-        }
-        
-        /* Dark mode support (if needed) */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bs-body-bg: #212529;
-                --bs-body-color: #fff;
-            }
-        }
-        
-        /* Accessibility improvements */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        /* Focus improvements for keyboard navigation */
-        .btn:focus,
-        .form-control:focus,
-        .form-select:focus,
-        a:focus {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
-        }
-        
-        /* Animation utilities */
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
-        
-        /* Loading states */
-        .loading {
-            pointer-events: none;
-            opacity: 0.6;
-        }
-        
-        .loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<body class="bg-light">
+<body>
     <!-- Main container with responsive classes -->
     <div class="container-fluid">
-        <!-- Optional: Add a header/navigation bar -->
+        <!-- Header/navigation bar -->
         <header class="d-none d-md-block mb-4">
-            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm">
+            <nav class="navbar navbar-expand-lg navbar-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand fw-bold text-primary" href="#">
+                    <a class="navbar-brand" href="#">
                         <i class="bi bi-hospital me-2"></i>ePharma System
                     </a>
                     <div class="navbar-nav ms-auto">
-                        <span class="navbar-text small text-muted">
+                        <span class="navbar-text small">
                             Prescription Tracking & Management
                         </span>
                     </div>
@@ -380,10 +45,10 @@
             {% endblock %}
         </main>
         
-        <!-- Optional: Add a footer -->
-        <footer class="mt-5 py-4 text-center text-muted d-none d-md-block">
+        <!-- Footer -->
+        <footer class="mt-5 py-4 text-center d-none d-md-block">
             <div class="container">
-                <small>&copy; 2025 ePharma & Prescription Tracking System. All rights reserved.</small>
+                <small>© 2025 ePharma & Prescription Tracking System. All rights reserved.</small>
             </div>
         </footer>
     </div>
@@ -398,8 +63,6 @@
     
     <!-- Custom JavaScript utilities -->
     <script>
-        // Utility functions for responsive behavior
-        
         // Toast notification function
         function showToast(message, type = 'info') {
             const toastContainer = document.getElementById('toastContainer');
@@ -420,7 +83,6 @@
             const toast = new bootstrap.Toast(document.getElementById(toastId));
             toast.show();
             
-            // Remove toast element after it's hidden
             document.getElementById(toastId).addEventListener('hidden.bs.toast', function() {
                 this.remove();
             });
@@ -454,20 +116,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             makeTableResponsive();
             
-            // Add fade-in animation to main content
             const mainContent = document.querySelector('main');
             if (mainContent) {
                 mainContent.classList.add('fade-in');
             }
         });
-        
-        // Handle responsive navigation on mobile
-        function toggleMobileNav() {
-            const navbar = document.querySelector('.navbar-collapse');
-            if (navbar) {
-                navbar.classList.toggle('show');
-            }
-        }
         
         // Smooth scrolling for anchor links
         document.addEventListener('click', function(e) {
@@ -483,8 +136,5 @@
             }
         });
     </script>
-    
-    <!-- Your custom script -->
-    <script src="/static/script.js"></script>
 </body>
 </html>
