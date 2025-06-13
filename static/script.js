@@ -3,17 +3,28 @@ let currentUser = null;
 // Attach event listeners for buttons
 document.addEventListener('DOMContentLoaded', () => {
     // Toggle between login and signup forms
-    document.getElementById('showSignupLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        showSignup();
-    });
-    document.getElementById('showLoginLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        showLogin();
-    });
-    document.getElementById('signupRole').addEventListener('change', function() {
-        document.getElementById('signupAllergies').disabled = this.value !== 'Patient';
-    });
+    const showSignupLink = document.getElementById('showSignupLink');
+    if (showSignupLink) {
+        showSignupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSignup();
+        });
+    }
+
+    const showLoginLink = document.getElementById('showLoginLink');
+    if (showLoginLink) {
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLogin();
+        });
+    }
+
+    const signupRole = document.getElementById('signupRole');
+    if (signupRole) {
+        signupRole.addEventListener('change', function() {
+            document.getElementById('signupAllergies').disabled = this.value !== 'Patient';
+        });
+    }
 
     // Login button
     const loginButton = document.getElementById('loginButton');
@@ -59,6 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkLowStockButton = document.getElementById('checkLowStockButton');
     if (checkLowStockButton) {
         checkLowStockButton.addEventListener('click', fetchLowStock);
+    }
+
+    // Pharmacy Dashboard: Toggle New Tablet Fields
+    const medicineIdStock = document.getElementById('medicineIdStock');
+    if (medicineIdStock) {
+        medicineIdStock.addEventListener('change', toggleNewTabletFields);
     }
 });
 
@@ -542,4 +559,43 @@ function updateStock() {
     };
 
     if (medicineId === 'new') {
-        const newTabletName = document.getElementById('newTabletName').value
+        const newTabletName = document.getElementById('newTabletName').value;
+        const newTabletStrength = document.getElementById('newTabletStrength').value;
+        const newTabletManufacturer = document.getElementById('newTabletManufacturer').value;
+
+        if (!newTabletName || !newTabletStrength || !newTabletManufacturer) {
+            confirmationDiv.innerHTML = '<p class="text-danger">Please fill in all new tablet details.</p>';
+            return;
+        }
+
+        data.new_tablet = {
+            name: newTabletName,
+            strength: newTabletStrength,
+            manufacturer: newTabletManufacturer
+        };
+    }
+
+    fetch('/update_stock', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            confirmationDiv.innerHTML = '<p class="text-success">Stock updated successfully!</p>';
+            document.getElementById('stockForm').reset();
+            toggleNewTabletFields();
+            fetchMedicinesForStock();
+            setTimeout(() => {
+                confirmationDiv.innerHTML = '';
+            }, 3000);
+        } else {
+            confirmationDiv.innerHTML = `<p class="text-danger">Error updating stock: ${data.message}</p>`;
+        }
+    })
+    .catch(error => {
+        confirmationDiv.innerHTML = '<p class="text-danger">Error updating stock. Please try again.</p>';
+        console.error('Error:', error);
+    });
+}
