@@ -36,22 +36,34 @@ function signup() {
         allergies: document.getElementById('signupAllergies').value
     };
 
+    console.log('Signup request data:', data);
+
     fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Signup response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Signup response data:', data);
         if (data.status === 'success') {
-            alert('Registration successful! Please login.');
+            showToast('Registration successful! Please login.', 'success');
             showLogin();
             document.getElementById('signupForm').reset();
         } else {
-            alert(data.message);
+            showToast(data.message || 'Signup failed. Please try again.', 'danger');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Signup error:', error);
+        showToast('Error connecting to the server. Please try again later.', 'danger');
+    });
 }
 
 function login() {
@@ -59,13 +71,22 @@ function login() {
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
 
+    console.log('Login request data:', { username, password, role });
+
     fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, role })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Login response status:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('Login response data:', data);
         if (data.status === 'success') {
             currentUser = { id: data.user_id, role: data.role, name: data.name };
             document.getElementById('loginSection').classList.add('d-none');
@@ -86,11 +107,15 @@ function login() {
                 document.getElementById('pharmacyName').textContent = data.name;
                 fetchMedicinesForStock();
             }
+            showToast('Login successful!', 'success');
         } else {
-            alert('Invalid credentials');
+            showToast('Invalid credentials. Please try again.', 'danger');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Login error:', error);
+        showToast('Error connecting to the server. Please try again later.', 'danger');
+    });
 }
 
 function fetchPatients() {
@@ -215,13 +240,16 @@ function prescribe() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert('Prescription created successfully');
+            showToast('Prescription created successfully', 'success');
             document.getElementById('prescribeForm').reset();
         } else {
-            alert(data.message);
+            showToast(data.message || 'Error creating prescription', 'danger');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error connecting to the server', 'danger');
+    });
 }
 
 function fetchPrescriptions() {
@@ -276,17 +304,20 @@ function placeOrder() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert('Order placed successfully');
+            showToast('Order placed successfully', 'success');
             document.getElementById('orderForm').reset();
         } else {
             if (data.alternatives) {
-                alert(`Out of stock. Try these pharmacies: ${data.alternatives.map(a => a.name).join(', ')}`);
+                showToast(`Out of stock. Try these pharmacies: ${data.alternatives.map(a => a.name).join(', ')}`, 'warning');
             } else {
-                alert(data.message);
+                showToast(data.message || 'Error placing order', 'danger');
             }
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error connecting to the server', 'danger');
+    });
 }
 
 function fetchOrders() {
@@ -324,13 +355,16 @@ function updateOrderStatus(orderId, status) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert(`Order ${status} successfully`);
+            showToast(`Order ${status} successfully`, 'success');
             fetchOrders();
         } else {
-            alert('Error updating order');
+            showToast('Error updating order', 'danger');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error connecting to the server', 'danger');
+    });
 }
 
 function fetchMostPrescribed() {
@@ -371,7 +405,7 @@ function findPharmacies() {
     const zipCode = document.getElementById('zipCode').value;
     const medicineId = document.getElementById('medicineIdPharmacy').value;
     if (!zipCode || !medicineId) {
-        alert('Please select both a zip code and a medicine.');
+        showToast('Please select both a zip code and a medicine.', 'warning');
         return;
     }
     fetch(`/nearby_pharmacies/${zipCode}/${medicineId}`)
@@ -387,7 +421,10 @@ function findPharmacies() {
             pharmaciesDiv.innerHTML += `<p>ID: ${p.id}, Name: ${p.name}</p>`;
         });
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error connecting to the server', 'danger');
+    });
 }
 
 function fetchRefillReminders() {
