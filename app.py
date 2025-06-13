@@ -13,6 +13,15 @@ def get_db_connection():
         g.db.row_factory = sqlite3.Row  # Allows fetching rows as dictionaries
     return g.db
 
+# Initialize the database if it doesn't exist
+db_path = os.getenv('SQLITE_DB_PATH', 'epharma.db')
+if not os.path.exists(db_path):
+    conn = sqlite3.connect(db_path)
+    with open('database_schema.sql', 'r') as f:
+        conn.executescript(f.read())
+    conn.commit()
+    conn.close()
+
 @app.teardown_appcontext
 def close_db(error):
     db = g.pop('db', None)
