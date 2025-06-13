@@ -1,6 +1,6 @@
 let currentUser = null;
 
-// Attach event listeners for toggling between login and signup forms
+// Attach event listeners for buttons
 document.addEventListener('DOMContentLoaded', () => {
     // Toggle between login and signup forms
     document.getElementById('showSignupLink').addEventListener('click', (e) => {
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('signupAllergies').disabled = this.value !== 'Patient';
     });
 
-    // Add event listener for the login button
+    // Login button
     const loginButton = document.getElementById('loginButton');
     if (loginButton) {
         loginButton.addEventListener('click', () => {
@@ -23,6 +23,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
         console.error('Login button not found in the DOM');
+    }
+
+    // Doctor Dashboard: Most Prescribed Medicines
+    const mostPrescribedButton = document.getElementById('mostPrescribedButton');
+    if (mostPrescribedButton) {
+        mostPrescribedButton.addEventListener('click', fetchMostPrescribed);
+    }
+
+    // Patient Dashboard: View Prescriptions
+    const viewPrescriptionsButton = document.getElementById('viewPrescriptionsButton');
+    if (viewPrescriptionsButton) {
+        viewPrescriptionsButton.addEventListener('click', fetchPrescriptions);
+    }
+
+    // Patient Dashboard: Find Pharmacies
+    const findPharmaciesButton = document.getElementById('findPharmaciesButton');
+    if (findPharmaciesButton) {
+        findPharmaciesButton.addEventListener('click', findPharmacies);
+    }
+
+    // Patient Dashboard: Check Reminders
+    const checkRemindersButton = document.getElementById('checkRemindersButton');
+    if (checkRemindersButton) {
+        checkRemindersButton.addEventListener('click', fetchRefillReminders);
+    }
+
+    // Pharmacy Dashboard: View Orders
+    const viewOrdersButton = document.getElementById('viewOrdersButton');
+    if (viewOrdersButton) {
+        viewOrdersButton.addEventListener('click', fetchOrders);
+    }
+
+    // Pharmacy Dashboard: Check Low Stock
+    const checkLowStockButton = document.getElementById('checkLowStockButton');
+    if (checkLowStockButton) {
+        checkLowStockButton.addEventListener('click', fetchLowStock);
     }
 });
 
@@ -348,10 +384,19 @@ function fetchOrders() {
                     <p><strong>Prescription ID:</strong> ${o.prescription_id}</p>
                     <p><strong>Medicine:</strong> ${o.medicine}</p>
                     <p><strong>Status:</strong> ${o.status}</p>
-                    <button onclick="updateOrderStatus(${o.order_id}, 'Fulfilled')" class="btn btn-success btn-sm me-2">Mark Fulfilled</button>
-                    <button onclick="updateOrderStatus(${o.order_id}, 'Cancelled')" class="btn btn-danger btn-sm">Cancel</button>
+                    <button class="btn btn-success btn-sm me-2" data-order-id="${o.order_id}" data-status="Fulfilled">Mark Fulfilled</button>
+                    <button class="btn btn-danger btn-sm" data-order-id="${o.order_id}" data-status="Cancelled">Cancel</button>
                 </div>
             `;
+        });
+
+        // Add event listeners to the dynamically created buttons
+        document.querySelectorAll('#pendingOrders button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const orderId = e.target.getAttribute('data-order-id');
+                const status = e.target.getAttribute('data-status');
+                updateOrderStatus(orderId, status);
+            });
         });
     })
     .catch(error => console.error('Error:', error));
@@ -497,43 +542,4 @@ function updateStock() {
     };
 
     if (medicineId === 'new') {
-        const newTabletName = document.getElementById('newTabletName').value;
-        const newTabletStrength = document.getElementById('newTabletStrength').value;
-        const newTabletManufacturer = document.getElementById('newTabletManufacturer').value;
-
-        if (!newTabletName || !newTabletStrength || !newTabletManufacturer) {
-            confirmationDiv.innerHTML = '<p class="text-danger">Please fill in all new tablet details.</p>';
-            return;
-        }
-
-        data.new_tablet = {
-            name: newTabletName,
-            strength: newTabletStrength,
-            manufacturer: newTabletManufacturer
-        };
-    }
-
-    fetch('/update_stock', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            confirmationDiv.innerHTML = '<p class="text-success">Stock updated successfully!</p>';
-            document.getElementById('stockForm').reset();
-            toggleNewTabletFields();
-            fetchMedicinesForStock();
-            setTimeout(() => {
-                confirmationDiv.innerHTML = '';
-            }, 3000);
-        } else {
-            confirmationDiv.innerHTML = `<p class="text-danger">Error updating stock: ${data.message}</p>`;
-        }
-    })
-    .catch(error => {
-        confirmationDiv.innerHTML = '<p class="text-danger">Error updating stock. Please try again.</p>';
-        console.error('Error:', error);
-    });
-}
+        const newTabletName = document.getElementById('newTabletName').value
